@@ -3,7 +3,6 @@
     import { dia, ui, shapes } from '@clientio/rappid';
     import '../node_modules/@clientio/rappid/rappid.css';
 
-
     onMount(async () => {
 
         const main = document.getElementById('app');
@@ -48,8 +47,9 @@
     });
 
 </script>
-    <main id="app" class="app">
 
-    </main>
+<main id="app" class="app">
+</main>
+
 <style>
 </style>
