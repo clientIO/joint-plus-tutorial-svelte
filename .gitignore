@@ -1,0 +1,9 @@
+/node_modules/
+/public/build/
+package-lock.json
+
+# rappid
+rappid.tgz
+
+.DS_Store
+
