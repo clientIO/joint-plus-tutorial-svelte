@@ -1,8 +1,8 @@
 <script>
-    import { onMount, getContext, onDestroy } from 'svelte';
-    import { dia, ui, shapes } from '@clientio/rappid';
-    import { HyperlinkHighlighter } from '../hyperlink-highlighter.ts';
-    import { TABS } from './Tabs.svelte';
+    import { onMount, getContext, onDestroy } from "svelte";
+    import { dia, ui, shapes } from "@clientio/rappid";
+    import { HyperlinkHighlighter } from "../hyperlink-highlighter.ts";
+    import { TABS } from "./Tabs.svelte";
 
     /* 
         Props - Svelte convention is to use 'export let' for props
@@ -15,68 +15,72 @@
     /* 
         Extend the default activity icons with all events icons
     */
-    Object.assign(shapes.bpmn2.Activity.ACTIVITY_TYPE_ICONS, shapes.bpmn2.Event.EVENT_ICONS);
+    Object.assign(
+        shapes.bpmn2.Activity.ACTIVITY_TYPE_ICONS,
+        shapes.bpmn2.Event.EVENT_ICONS
+    );
 
-    const theme = 'material';
+    const theme = "material";
     let paper;
     let scroller;
 
     onMount(async () => {
         appendGraph();
-	});
+    });
 
     /* 
         Append graph content
     */
     const appendGraph = () => {
-        const wrapper = document.querySelector('.wrapper');
+        const wrapper = document.querySelector(".wrapper");
 
         const { graph, focusPoint } = tabs[index];
 
         paper = new dia.Paper({
             model: graph,
             background: {
-            color: '#F8F9FA',
+                color: "#F8F9FA",
             },
             frozen: true,
             async: true,
             gridSize: 10,
             cellViewNamespace: shapes,
-            defaultConnectionPoint: { name: 'boundary' },
+            defaultConnectionPoint: { name: "boundary" },
         });
+
         scroller = new ui.PaperScroller({
             paper,
             baseWidth: 10,
             baseHeight: 10,
             autoResizePaper: true,
             contentOptions: {
-            minWidth: 600,
-            allowNewOrigin: 'any',
-            allowNegativeBottomRight: true,
-            useModelGeometry: true,
-            padding: 100
+                minWidth: 600,
+                allowNewOrigin: "any",
+                allowNegativeBottomRight: true,
+                useModelGeometry: true,
+                padding: 100,
             },
-            cursor: 'grab'
+            cursor: "grab",
         });
 
         wrapper.appendChild(scroller.el);
         scroller.render().adjustPaper();
 
-        paper.on('element:link', (elementView, evt) => {
+        paper.on("element:link", (elementView, evt) => {
             const { subgraphId } = elementView.model.attributes;
             if (!subgraphId) return;
             evt.stopPropagation();
             selectGraph(subgraphId);
         });
 
-        paper.on('blank:pointerdown', (evt) => {
+        paper.on("blank:pointerdown", (evt) => {
             scroller.startPanning(evt);
         });
 
         graph.getElements().forEach((element) => {
-            HyperlinkHighlighter.addToLabel(element, paper, 'subgraphId');
+            HyperlinkHighlighter.addToLabel(element, paper, "subgraphId");
         });
-        
+
         if (focusPoint) {
             scroller.center(focusPoint.x, focusPoint.y);
         } else {
@@ -84,24 +88,23 @@
         }
 
         paper.unfreeze();
-    }
+    };
 
-   /* 
+    /* 
         Select a tab by its graph Id
-   */
+    */
     const selectGraph = (graphId) => {
-        const index = tabs.findIndex(tab => tab.graph.id === graphId);
+        const index = tabs.findIndex((tab) => tab.graph.id === graphId);
         if (index > -1) {
             updateTabByIndex(index);
         } else {
-        const message = new ui.FlashMessage({
-            theme,
-            content: `Invalid sub-process ID: ${graphId}`,
-        });
+            const message = new ui.FlashMessage({
+                theme,
+                content: `Invalid sub-process ID: ${graphId}`,
+            });
             message.open();
         }
-    }
+    };
 </script>
 
-<div class='wrapper'>
-</div>
+<div class="wrapper" />

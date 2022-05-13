@@ -10,13 +10,13 @@ export const createTabState = (title: string, json?: any) => {
     const graph = new dia.Graph({ id: util.uuid() }, { cellNamespace: shapes });
     let focusPoint;
     if (json) {
-      graph.fromJSON(json);
-      focusPoint = graph.getBBox()?.center().toJSON();
+        graph.fromJSON(json);
+        focusPoint = graph.getBBox()?.center().toJSON();
     }
     return {
-      title,
-      graph,
-      focusPoint
+        title,
+        graph,
+        focusPoint
     }
 }
 

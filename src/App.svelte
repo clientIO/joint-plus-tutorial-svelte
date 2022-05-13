@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { Tabs, TabList, TabPanel, Tab } from './components/tabs';
-    import Graph from './components/Graph.svelte';
-    import { tabStore } from './store';
-    import '../node_modules/@clientio/rappid/rappid.css';
+    import { Tabs, TabList, TabPanel, Tab } from "./components/tabs";
+    import Graph from "./components/Graph.svelte";
+    import { tabStore } from "./store";
+    import "../node_modules/@clientio/rappid/rappid.css";
 
     let tabs;
     tabStore.subscribe((store) => {
@@ -13,18 +13,15 @@
 <div class="app">
     <Tabs>
         <TabList>
-            {#each tabs as tab }
+            {#each tabs as tab}
                 <Tab title={tab.title}>
                     {tab.title}
                 </Tab>
             {/each}
         </TabList>
-        {#each tabs as tab, i }
+        {#each tabs as tab, i}
             <TabPanel>
-                <Graph
-                    tabs={tabs} 
-                    index={i}>
-                </Graph>
+                <Graph {tabs} index={i} />
                 <h2 class="tabs-title">{tab.title}</h2>
             </TabPanel>
         {/each}

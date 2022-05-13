@@ -7,7 +7,7 @@ interface HyperlinkHighlighterOptions extends dia.HighlighterView.Options {
 export class HyperlinkHighlighter extends dia.HighlighterView<HyperlinkHighlighterOptions> {
 
     preinitialize() {
-      this.MOUNTABLE = false;
+        this.MOUNTABLE = false;
     }
 
     highlight(elementView: dia.ElementView, node: SVGElement) {
