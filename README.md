@@ -38,7 +38,7 @@ npm install
 Your demo is now ready to start.
 
 ```
-npm start
+npm run dev
 ```
 
 You should be able to view the demo at `http://localhost:8080`.
