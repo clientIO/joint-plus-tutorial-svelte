@@ -23,6 +23,7 @@
     const theme = "material";
     let paper;
     let scroller;
+    let ref;
 
     onMount(async () => {
         appendGraph();
@@ -32,8 +33,6 @@
         Append graph content
     */
     const appendGraph = () => {
-        const wrapper = document.querySelector(".wrapper");
-
         const { graph, focusPoint } = tabs[index];
 
         paper = new dia.Paper({
@@ -63,7 +62,7 @@
             cursor: "grab",
         });
 
-        wrapper.appendChild(scroller.el);
+        ref.appendChild(scroller.el);
         scroller.render().adjustPaper();
 
         paper.on("element:link", (elementView, evt) => {
@@ -107,4 +106,4 @@
     };
 </script>
 
-<div class="wrapper" />
+<div bind:this={ref} class="wrapper" />
