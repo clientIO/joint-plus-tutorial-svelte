@@ -3,6 +3,7 @@
     import { dia, ui, shapes } from "@clientio/rappid";
     import { HyperlinkHighlighter } from "../hyperlink-highlighter.ts";
     import { TABS } from "./Tabs.svelte";
+    import { tabStore } from "../store";
 
     /* 
         Props - Svelte convention is to use 'export let' for props
@@ -76,6 +77,11 @@
             scroller.startPanning(evt);
         });
 
+        paper.on("blank:pointerup", () => {
+            const focusPoint = scroller.getVisibleArea().center().toJSON();
+            updateFocusPoint(focusPoint);
+        });
+
         graph.getElements().forEach((element) => {
             HyperlinkHighlighter.addToLabel(element, paper, "subgraphId");
         });
@@ -103,6 +109,16 @@
             });
             message.open();
         }
+    };
+
+    /* 
+        Update ui.PaperScroller focusPoint
+    */
+    const updateFocusPoint = (point) => {
+        tabStore.update((store) => {
+            store[index].focusPoint = point;
+            return store;
+        });
     };
 </script>
 

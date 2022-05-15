@@ -65,7 +65,7 @@
 
         /* 
             Remove a tab at the specified index
-         */
+        */
         removeTab: (tab) => {
             const index = tabs.indexOf(tab);
             tabStore.update((store) => store.filter((_, i) => i !== index));
