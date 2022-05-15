@@ -1,5 +1,5 @@
 <script>
-    import { onMount, getContext, onDestroy } from "svelte";
+    import { onMount, getContext } from "svelte";
     import { dia, ui, shapes } from "@clientio/rappid";
     import { HyperlinkHighlighter } from "../hyperlink-highlighter.ts";
     import { TABS } from "./Tabs.svelte";

@@ -1,16 +1,33 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+    import { ui } from "@clientio/rappid";
     import { Tabs, TabList, TabPanel, Tab } from "./components/tabs";
     import Graph from "./components/Graph.svelte";
     import { tabStore } from "./store";
     import "../node_modules/@clientio/rappid/rappid.css";
 
+    let app;
     let tabs;
+
     tabStore.subscribe((store) => {
         tabs = store;
     });
+
+    onMount(async () => {
+        new ui.Tooltip({
+            theme: "material",
+            rootTarget: app,
+            container: app,
+            target: "[data-tooltip]",
+            direction: ui.Tooltip.TooltipArrowPosition.Auto,
+            position: ui.Tooltip.TooltipPosition.Top,
+            padding: 10,
+            animation: true,
+        });
+    });
 </script>
 
-<div class="app">
+<div bind:this={app} class="app">
     <Tabs>
         <TabList>
             {#each tabs as tab}
