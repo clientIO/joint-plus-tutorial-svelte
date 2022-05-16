@@ -15,4 +15,7 @@
 </div>
 
 <style>
+    button {
+        margin: 7px 0px 6px 0;
+    }
 </style>
