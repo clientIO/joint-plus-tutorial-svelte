@@ -1,50 +1,192 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { dia, ui, shapes } from '@clientio/rappid';
+  import { dia, ui, shapes, highlighters } from '@clientio/rappid';
+  import { TreeView } from 'carbon-components-svelte';
+  import Element from './icons/Element.svelte';
+  import Link from './icons/Link.svelte';
+  import { TreeData } from './tree-data';
   import '../node_modules/@clientio/rappid/rappid.css';
 
-  let ref;
+  let canvasEl;
 
-  onMount(async () => {
+  const [initialDiagram = { id: '', cells: [] }] = TreeData;
+  let prevDiagram = initialDiagram.id;
+
+  let diagrams = TreeData.map((diagram) => {
+    const graph = new dia.Graph({}, { cellNamespace: shapes });
+    graph.fromJSON(diagram);
+    return {
+      id: diagram.id,
+      name: diagram.name,
+      graph,
+      nodes: graph.getCells().map((cell) => {
+        return {
+          id: `${diagram.id}-${cell.id}`,
+          name: cell.isElement()
+            ? cell.attr(['label', 'text']) || `Element (${cell.id})`
+            : cell.prop(['labels', 0, 'attrs', 'text', 'text']) ||
+              `Link (${cell.id})`,
+          isElement: cell.isElement(),
+        };
+      }),
+    };
+  });
+
+  /* 
+    TreeView Props
+    https://carbon-components-svelte.onrender.com/components/TreeView
+  */
+  let activeId = initialDiagram.id;
+  let selectedIds = [...initialDiagram.id];
+  let expandedIds = [initialDiagram.id];
+  let hideLabel = true;
+  // Create TreeItems according to carbon svelte componet requirements
+  let children = diagrams.map((diagram) => {
+    return {
+      id: diagram.id,
+      text: diagram.name,
+      children: diagram.nodes.map((node) => {
+        return {
+          id: node.id,
+          text: node.name,
+          icon: node.isElement ? Element : Link,
+        };
+      }),
+    };
+  });
+
+  let graph = (function () {
+    const graph = new dia.Graph({}, { cellNamespace: shapes });
+    graph.fromJSON(initialDiagram);
+    return graph;
+  })();
+
+  const handleExpandedIds = (detail) => {
+    if (detail.leaf === false) {
+      if (expandedIds.includes(detail.id)) {
+        expandedIds = expandedIds.filter((id) => id !== detail.id);
+      } else {
+        expandedIds = [...expandedIds, detail.id];
+      }
+    }
+  };
+
+  const selectNode = (detail) => {
+    const [diagramId, cellId = null] = detail.id.split('-');
+    if (diagramId !== prevDiagram) {
+      const diagram = diagrams.find((diagram) => diagram.id === diagramId);
+      if (diagram) {
+        graph.fromJSON(diagram.graph.toJSON());
+        prevDiagram = diagramId;
+      }
+    }
+    graph.set('selectedCell', cellId);
+    activeId = detail.id;
+    selectedIds = [...detail.id];
+  };
+
+  onMount(() => {
     const namespace = shapes;
-
-    const graph = new dia.Graph({}, { cellNamespace: namespace });
 
     const paper = new dia.Paper({
       model: graph,
-      background: {
-        color: '#F8F9FA',
-      },
       frozen: true,
       async: true,
       cellViewNamespace: namespace,
+      clickThreshold: 10,
+      moveThreshold: 10,
+      interactive: false,
+      defaultConnectionPoint: {
+        name: 'boundary',
+      },
     });
 
     const scroller = new ui.PaperScroller({
       paper,
       autoResizePaper: true,
       cursor: 'grab',
-    });
-
-    ref.appendChild(scroller.el);
-    scroller.render().center();
-
-    const rect = new shapes.standard.Rectangle({
-      position: { x: 100, y: 100 },
-      size: { width: 100, height: 50 },
-      attrs: {
-        label: {
-          text: 'Hello World',
-        },
+      baseWidth: 1,
+      baseHeight: 1,
+      padding: 0,
+      contentOptions: {
+        useModelGeometry: true,
+        padding: 200,
       },
     });
 
-    graph.addCell(rect);
+    canvasEl.appendChild(scroller.el);
+    scroller.render().centerContent({ useModelGeometry: true });
     paper.unfreeze();
+
+    // User Interactions
+
+    paper.on('cell:pointerclick', (cellView) => {
+      const cell = cellView.model;
+      const nodeId = `${graph.id}-${cell.id}`;
+      graph.set('selectedCell', cell.id);
+      activeId = nodeId;
+      selectedIds = [...nodeId];
+      if (!expandedIds.includes(nodeId.split('-')[0])) {
+        expandedIds = [...expandedIds, nodeId.split('-')[0]];
+      }
+    });
+
+    paper.on('blank:pointerclick', () => {
+      graph.set('selectedCell', null);
+      activeId = `${graph.id}`;
+      selectedIds = [`${graph.id}`];
+      (document.activeElement as HTMLElement)?.blur();
+    });
+
+    paper.on('blank:pointerdown', (evt) => scroller.startPanning(evt));
+
+    // Selection Frame
+
+    let selectionFrame: highlighters.mask | null = null;
+
+    paper.listenTo(graph, 'change:selectedCell', () => {
+      if (selectionFrame) {
+        selectionFrame.remove();
+        selectionFrame = null;
+      }
+      const cellId = graph.get('selectedCell');
+      const cell = graph.getCell(cellId);
+      if (cell) {
+        selectionFrame = highlighters.mask.add(
+          cell.findView(paper),
+          cell.isLink() ? 'line' : 'body',
+          'selection-frame',
+          {
+            layer: dia.Paper.Layers.BACK,
+            padding: 4,
+            attrs: {
+              'stroke-width': 2,
+              'stroke-linecap': 'round',
+              opacity: '0.6',
+            },
+          }
+        );
+      }
+    });
   });
 </script>
 
-<main bind:this={ref} class="app" />
+<main class="app">
+  <TreeView
+    {hideLabel}
+    {children}
+    bind:activeId
+    bind:selectedIds
+    bind:expandedIds
+    on:select={({ detail }) => {
+      selectNode(detail);
+      handleExpandedIds(detail);
+    }}
+    on:toggle={({ detail }) => handleExpandedIds(detail)}
+    on:focus={({ detail }) => selectNode(detail)}
+  />
+  <div bind:this={canvasEl} class="canvas" />
+</main>
 
 <style>
 </style>
