@@ -7,7 +7,7 @@
   import { TreeData } from './tree-data';
   import '../node_modules/@clientio/rappid/rappid.css';
 
-  let canvasEl;
+  let canvasEl: any;
 
   const [initialDiagram = { id: '', cells: [] }] = TreeData;
   let prevDiagram = initialDiagram.id;
@@ -60,16 +60,6 @@
     graph.fromJSON(initialDiagram);
     return graph;
   })();
-
-  const handleExpandedIds = (detail) => {
-    if (detail.leaf === false) {
-      if (expandedIds.includes(detail.id)) {
-        expandedIds = expandedIds.filter((id) => id !== detail.id);
-      } else {
-        expandedIds = [...expandedIds, detail.id];
-      }
-    }
-  };
 
   const selectNode = (detail) => {
     const [diagramId, cellId = null] = detail.id.split('-');
@@ -126,16 +116,17 @@
       graph.set('selectedCell', cell.id);
       activeId = nodeId;
       selectedIds = [...nodeId];
-      if (!expandedIds.includes(nodeId.split('-')[0])) {
-        expandedIds = [...expandedIds, nodeId.split('-')[0]];
+      if (!expandedIds.includes(graph.id as string)) {
+        expandedIds = [...expandedIds, graph.id as string];
       }
+      (document.getElementById(nodeId) as HTMLElement).focus();
     });
 
     paper.on('blank:pointerclick', () => {
       graph.set('selectedCell', null);
       activeId = `${graph.id}`;
       selectedIds = [`${graph.id}`];
-      (document.activeElement as HTMLElement)?.blur();
+      (document.getElementById(graph.id as string) as HTMLElement).focus();
     });
 
     paper.on('blank:pointerdown', (evt) => scroller.startPanning(evt));
@@ -178,11 +169,7 @@
     bind:activeId
     bind:selectedIds
     bind:expandedIds
-    on:select={({ detail }) => {
-      selectNode(detail);
-      handleExpandedIds(detail);
-    }}
-    on:toggle={({ detail }) => handleExpandedIds(detail)}
+    on:select={({ detail }) => selectNode(detail)}
     on:focus={({ detail }) => selectNode(detail)}
   />
   <div bind:this={canvasEl} class="canvas" />

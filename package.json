@@ -15,7 +15,7 @@
     "@tsconfig/svelte": "^2.0.0",
     "@types/backbone": "latest",
     "@types/jquery": "latest",
-    "carbon-components-svelte": "^0.65.2",
+    "carbon-components-svelte": "^0.65.3",
     "rollup": "^2.3.4",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",
