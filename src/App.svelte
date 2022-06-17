@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { dia, ui, shapes, highlighters } from '@clientio/rappid';
   import { TreeView } from 'carbon-components-svelte';
   import Element from './icons/Element.svelte';
@@ -119,7 +119,11 @@
       if (!expandedIds.includes(graph.id as string)) {
         expandedIds = [...expandedIds, graph.id as string];
       }
-      (document.getElementById(nodeId) as HTMLElement).focus();
+      async function focus() {
+        await tick();
+        (document.getElementById(nodeId) as HTMLElement).focus();
+      }
+      focus();
     });
 
     paper.on('blank:pointerclick', () => {
