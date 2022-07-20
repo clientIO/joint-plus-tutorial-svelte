@@ -17,6 +17,7 @@
       },
       frozen: true,
       async: true,
+      sorting: dia.Paper.sorting.Approx,
       cellViewNamespace: namespace,
     });
 
