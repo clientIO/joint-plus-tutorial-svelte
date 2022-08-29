@@ -4,7 +4,7 @@ This git repository is intended for instructional purposes.
 
 ### Prerequisites  
 
-To run the following code, you will need a [JointJS+ license](https://www.jointjs.com/license) that comes with the Rappid installable package file `rappid.tgz`.
+To run the following code, you will need a [JointJS+ license](https://www.jointjs.com/license) that comes with the JointJS+ installable package file `rappid.tgz`.
 
 ### Dependencies
 
