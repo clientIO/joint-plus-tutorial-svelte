@@ -9,8 +9,6 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
-    "@types/backbone": "latest",
-    "@types/jquery": "latest",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
     "rollup": "^2.3.4",
@@ -27,7 +25,7 @@
     "@tsconfig/svelte": "^2.0.0"
   },
   "dependencies": {
-    "@clientio/rappid": "file:rappid.tgz",
+    "@joint/plus": "file:joint-plus.tgz",
     "sirv-cli": "^2.0.0"
   }
 }

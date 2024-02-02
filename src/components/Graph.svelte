@@ -1,6 +1,6 @@
 <script>
     import { onMount, getContext } from "svelte";
-    import { dia, ui, shapes } from "@clientio/rappid";
+    import { dia, ui, shapes } from "@joint/plus";
     import { HyperlinkHighlighter } from "../hyperlink-highlighter.ts";
     import { TABS } from "./Tabs.svelte";
     import { tabStore } from "../store";

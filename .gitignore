@@ -2,8 +2,8 @@
 /public/build/
 package-lock.json
 
-# rappid
-rappid.tgz
+# joint-plus
+joint-plus.tgz
 
 .DS_Store
 
