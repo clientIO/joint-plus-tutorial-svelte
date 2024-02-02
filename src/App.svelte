@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { dia, ui, shapes } from '@clientio/rappid/rappid.js';
-    import '../node_modules/@clientio/rappid/rappid.css';
+    import { dia, ui, shapes } from '@joint/plus';
+    import '../node_modules/@joint/plus/joint-plus.css';
 
     let ref;
 
