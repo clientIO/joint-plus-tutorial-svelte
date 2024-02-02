@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { dia, shapes, util } from '@clientio/rappid';
+import { dia, shapes, util } from '@joint/plus';
 import { TabsData } from './tabs-data';
 
 

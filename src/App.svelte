@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { ui } from "@clientio/rappid";
+    import { ui } from "@joint/plus";
     import { Tabs, TabList, TabPanel, Tab } from "./components/tabs";
     import Graph from "./components/Graph.svelte";
     import { tabStore } from "./store";
-    import "../node_modules/@clientio/rappid/rappid.css";
+    import "../node_modules/@joint/plus/joint-plus.css";
 
     let app;
     let tabs;
