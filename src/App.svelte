@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import { dia, ui, shapes, highlighters } from '@clientio/rappid';
+  import { dia, ui, shapes, highlighters } from '@joint/plus';
   import { TreeView } from 'carbon-components-svelte';
   import Element from './icons/Element.svelte';
   import Link from './icons/Link.svelte';
   import { TreeData } from './tree-data';
-  import '../node_modules/@clientio/rappid/rappid.css';
+  import '../node_modules/@joint/plus/joint-plus.css';
 
   let canvasEl: any;
 
